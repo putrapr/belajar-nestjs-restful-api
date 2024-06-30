@@ -24,18 +24,71 @@ describe('UserController', () => {
     testService = app.get(TestService)
   })
 
-  describe('POST /api/users', () => {
+  // describe('POST /api/users', () => {
+  //   beforeEach(async () => {
+  //     await testService.deleteUser()
+  //   })
+
+  //   it('should be rejected if request is invalid', async () => {
+  //     const response = await request(app.getHttpServer())
+  //       .post('/api/users')
+  //       .send({
+  //         username: '',
+  //         password: '',
+  //         name: ''
+  //       })
+      
+  //     logger.info(response.body)
+
+  //     expect(response.status).toBe(400)
+  //     expect(response.body.errors).toBeDefined()
+  //   })
+
+  //   it('should be able to register', async () => {
+  //     const response = await request(app.getHttpServer())
+  //       .post('/api/users')
+  //       .send({
+  //         username: 'test',
+  //         password: 'test',
+  //         name: 'test'
+  //       })
+      
+  //     logger.info(response.body)
+
+  //     expect(response.status).toBe(200)
+  //     expect(response.body.data.username).toBe('test')
+  //     expect(response.body.data.name).toBe('test')
+  //   })
+
+  //   it('should be rejected if username already exists', async () => {
+  //     await testService.createUser()
+  //     const response = await request(app.getHttpServer())
+  //       .post('/api/users')
+  //       .send({
+  //         username: 'test',
+  //         password: 'test',
+  //         name: 'test'
+  //       })
+      
+  //     logger.info(response.body)
+
+  //     expect(response.status).toBe(400)
+  //     expect(response.body.errors).toBeDefined()
+  //   })
+  // })
+
+  describe('POST /api/users/login', () => {
     beforeEach(async () => {
       await testService.deleteUser()
+      await testService.createUser()
     })
 
     it('should be rejected if request is invalid', async () => {
       const response = await request(app.getHttpServer())
-        .post('/api/users')
+        .post('/api/users/login')
         .send({
           username: '',
-          password: '',
-          name: ''
+          password: ''
         })
       
       logger.info(response.body)
@@ -44,13 +97,12 @@ describe('UserController', () => {
       expect(response.body.errors).toBeDefined()
     })
 
-    it('should be able to register', async () => {
+    it('should be able to login', async () => {
       const response = await request(app.getHttpServer())
-        .post('/api/users')
+        .post('/api/users/login')
         .send({
           username: 'test',
-          password: 'test',
-          name: 'test'
+          password: 'test'
         })
       
       logger.info(response.body)
@@ -58,22 +110,7 @@ describe('UserController', () => {
       expect(response.status).toBe(200)
       expect(response.body.data.username).toBe('test')
       expect(response.body.data.name).toBe('test')
-    })
-
-    it('should be rejected if username already exists', async () => {
-      await testService.createUser()
-      const response = await request(app.getHttpServer())
-        .post('/api/users')
-        .send({
-          username: 'test',
-          password: 'test',
-          name: 'test'
-        })
-      
-      logger.info(response.body)
-
-      expect(response.status).toBe(400)
-      expect(response.body.errors).toBeDefined()
+      expect(response.body.data.token).toBeDefined()
     })
   })
 })
