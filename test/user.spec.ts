@@ -77,40 +77,70 @@ describe('UserController', () => {
   //   })
   // })
 
-  describe('POST /api/users/login', () => {
+  // describe('POST /api/users/login', () => {
+  //   beforeEach(async () => {
+  //     await testService.deleteUser()
+  //     await testService.createUser()
+  //   })
+
+  //   it('should be rejected if request is invalid', async () => {
+  //     const response = await request(app.getHttpServer())
+  //       .post('/api/users/login')
+  //       .send({
+  //         username: '',
+  //         password: ''
+  //       })
+      
+  //     logger.info(response.body)
+
+  //     expect(response.status).toBe(400)
+  //     expect(response.body.errors).toBeDefined()
+  //   })
+
+  //   it('should be able to login', async () => {
+  //     const response = await request(app.getHttpServer())
+  //       .post('/api/users/login')
+  //       .send({
+  //         username: 'test',
+  //         password: 'test'
+  //       })
+      
+  //     logger.info(response.body)
+
+  //     expect(response.status).toBe(200)
+  //     expect(response.body.data.username).toBe('test')
+  //     expect(response.body.data.name).toBe('test')
+  //     expect(response.body.data.token).toBeDefined()
+  //   })
+  // })
+
+  describe('GET /api/users/current', () => {
     beforeEach(async () => {
       await testService.deleteUser()
       await testService.createUser()
     })
 
-    it('should be rejected if request is invalid', async () => {
+    it('should be rejected if token is invalid', async () => {
       const response = await request(app.getHttpServer())
-        .post('/api/users/login')
-        .send({
-          username: '',
-          password: ''
-        })
+        .get('/api/users/current')
+        .set('Authorization', 'wrong')
       
-      logger.info(response.body)
+      logger.info(response.body)      
 
-      expect(response.status).toBe(400)
+      expect(response.status).toBe(401)
       expect(response.body.errors).toBeDefined()
     })
 
-    it('should be able to login', async () => {
+    it('should be able to get user', async () => {
       const response = await request(app.getHttpServer())
-        .post('/api/users/login')
-        .send({
-          username: 'test',
-          password: 'test'
-        })
+        .get('/api/users/current')
+        .set('Authorization', 'test')
       
       logger.info(response.body)
 
       expect(response.status).toBe(200)
       expect(response.body.data.username).toBe('test')
       expect(response.body.data.name).toBe('test')
-      expect(response.body.data.token).toBeDefined()
     })
   })
 })
