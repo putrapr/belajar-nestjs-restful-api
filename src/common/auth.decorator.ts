@@ -2,9 +2,7 @@ import { ExecutionContext, HttpException, createParamDecorator } from '@nestjs/c
 
 export const Auth = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
-    const request = context.switchToHttp().getRequest()
-    // console.log(request.user)
-    
+    const request = context.switchToHttp().getRequest()    
     const user = request.user
     if (user)
       return user
